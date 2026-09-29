@@ -1,121 +1,60 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#111827" />
-  <title>Тренажёр умножения 1–9 × 1–5</title>
-  <style>
-    :root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#111827;background:#f3f4f6}
-    *{box-sizing:border-box} body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px}
-    .app{width:min(100%,520px);background:#fff;border-radius:24px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.10)}
-    header{display:flex;justify-content:space-between;gap:16px;align-items:center}.title{font-size:18px;font-weight:800}.progress{font-variant-numeric:tabular-nums;color:#6b7280}
-    .bar{height:8px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:16px 0 28px}.bar>div{height:100%;width:0;background:#111827;transition:width .2s}
-    .problem{text-align:center;font-size:58px;font-weight:850;letter-spacing:-2px;margin:10px 0 22px}
-    .answer{width:100%;font-size:34px;text-align:center;padding:14px;border:2px solid #d1d5db;border-radius:16px;outline:none}.answer:focus{border-color:#111827}
-    .feedback{min-height:28px;text-align:center;margin:14px 0;font-weight:700}.ok{color:#047857}.bad{color:#b91c1c}
-    .buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:0;border-radius:14px;padding:14px;font-size:16px;font-weight:800;cursor:pointer}.primary{background:#111827;color:#fff}.secondary{background:#e5e7eb;color:#111827}
-    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:22px}.stat{background:#f9fafb;border-radius:14px;padding:12px;text-align:center}.stat b{display:block;font-size:20px}.stat span{font-size:12px;color:#6b7280}
-    .panel{margin-top:18px;padding-top:18px;border-top:1px solid #e5e7eb}.panel h2{font-size:15px;margin:0 0 10px}.mistakes{margin:0;padding-left:20px;color:#4b5563}.hidden{display:none}
-    .finish{text-align:center}.finish h1{margin:6px 0}.finish .big{font-size:48px;font-weight:900;margin:10px 0}
-    @media(max-width:420px){.app{padding:18px;border-radius:18px}.problem{font-size:50px}}
-  </style>
-</head>
-<body>
-<main class="app">
-  <section id="game">
-    <header><div class="title">Умножение 1–9 × 1–5</div><div class="progress" id="progress">1 / 30</div></header>
-    <div class="bar"><div id="bar"></div></div>
-    <div class="problem" id="problem">8 × 4</div>
-    <form id="form">
-      <input id="answer" class="answer" type="number" inputmode="numeric" autocomplete="off" aria-label="Ответ" />
-      <div id="feedback" class="feedback"></div>
-      <div class="buttons"><button class="btn primary" type="submit">Проверить</button><button class="btn secondary" id="restart" type="button">Заново</button></div>
-    </form>
-    <div class="stats"><div class="stat"><b id="correct">0</b><span>правильно</span></div><div class="stat"><b id="errors">0</b><span>ошибок</span></div><div class="stat"><b id="accuracy">—</b><span>точность</span></div></div>
-  </section>
-
-  <section id="finish" class="finish hidden">
-    <h1>Раунд завершён</h1><div class="big" id="finalAccuracy">100%</div><p id="finalSummary"></p>
-    <div class="panel"><h2>Ошибки этого раунда</h2><ul id="mistakes" class="mistakes"></ul></div>
-    <div class="buttons" style="margin-top:20px"><button class="btn primary" id="again">Ещё 30</button><button class="btn secondary" id="clearHistory">Сбросить историю</button></div>
-  </section>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#7c3aed">
+<title>Весёлое умножение 1–9 × 1–5</title>
+<style>
+:root{font-family:Nunito,ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif;color:#2d2140}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:18px;background:linear-gradient(145deg,#dff7ff 0%,#f4e7ff 45%,#fff1c7 100%);overflow-x:hidden}
+body:before,body:after{content:"";position:fixed;border-radius:50%;filter:blur(2px);opacity:.45;z-index:-1}body:before{width:260px;height:260px;background:#86efac;left:-90px;top:-80px}body:after{width:320px;height:320px;background:#f9a8d4;right:-130px;bottom:-100px}
+.app{width:min(100%,540px);background:rgba(255,255,255,.9);border:3px solid #fff;border-radius:32px;padding:22px;box-shadow:0 20px 55px rgba(92,50,140,.18);backdrop-filter:blur(10px);position:relative}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px}.title{font-size:19px;font-weight:900}.progress{background:#ede9fe;color:#6d28d9;padding:7px 11px;border-radius:99px;font-weight:900;font-variant-numeric:tabular-nums}
+.topline{display:flex;justify-content:space-between;align-items:center;margin:13px 2px 7px;font-weight:900}.streak{color:#ea580c}.stars{color:#ca8a04}
+.bar{height:12px;background:#ede9fe;border-radius:99px;overflow:hidden;margin:0 0 22px}.bar>div{height:100%;width:0;background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);transition:width .3s;border-radius:99px}
+.card{position:relative;background:linear-gradient(135deg,#8b5cf6,#6366f1);border-radius:27px;padding:29px 16px 25px;box-shadow:0 12px 0 #ddd6fe,0 20px 32px rgba(99,102,241,.2);margin-bottom:22px;overflow:hidden}.card:before,.card:after{content:"★";position:absolute;color:rgba(255,255,255,.2);font-size:56px}.card:before{left:18px;top:8px;transform:rotate(-18deg)}.card:after{right:17px;bottom:-9px;transform:rotate(17deg)}
+.mascot{text-align:center;font-size:38px;height:44px;animation:float 2.2s ease-in-out infinite}.problem{text-align:center;color:#fff;font-size:64px;font-weight:1000;letter-spacing:-2px;text-shadow:0 3px 0 rgba(0,0,0,.1);margin:5px 0}
+.reviewtag{text-align:center;color:#ede9fe;font-weight:900;font-size:13px;min-height:18px}
+.answer{width:100%;font-size:38px;font-weight:900;text-align:center;padding:14px;border:3px solid #ddd6fe;border-radius:18px;outline:none;background:#fff}.answer:focus{border-color:#8b5cf6;box-shadow:0 0 0 5px #ede9fe}
+.feedback{min-height:50px;display:grid;place-items:center;text-align:center;margin:9px 0;font-weight:900;font-size:16px;line-height:1.25}.ok{color:#15803d}.bad{color:#b45309}
+.buttons{display:grid;grid-template-columns:1.45fr .75fr;gap:10px}.btn{border:0;border-radius:16px;padding:15px 12px;font-size:16px;font-weight:900;cursor:pointer;transition:transform .1s}.btn:active{transform:translateY(2px)}.primary{background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;box-shadow:0 6px 0 #ddd6fe}.secondary{background:#f3f4f6;color:#6b7280}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:22px}.stat{background:#faf5ff;border-radius:16px;padding:11px 6px;text-align:center}.stat b{display:block;font-size:21px}.stat span{font-size:11px;color:#7c6f8f;font-weight:800}
+.panel{margin-top:18px;padding-top:18px;border-top:1px solid #eee}.panel h2{font-size:15px;margin:0 0 10px}.mistakes{margin:0;padding-left:20px;color:#6b5c76}.hidden{display:none}.finish{text-align:center}.finish h1{font-size:29px;margin:8px}.finish .trophy{font-size:70px}.finish .big{font-size:52px;font-weight:1000;color:#7c3aed;margin:8px}
+.pop{animation:pop .35s ease}.shake{animation:shake .35s ease}.confetti{position:fixed;z-index:20;pointer-events:none;font-size:22px;animation:confetti 900ms ease-out forwards}
+@keyframes pop{50%{transform:scale(1.07)}}@keyframes shake{25%{transform:translateX(-7px)}50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}@keyframes float{50%{transform:translateY(-5px)}}@keyframes confetti{to{transform:translate(var(--x),var(--y)) rotate(420deg);opacity:0}}
+@media(max-width:420px){.app{padding:16px;border-radius:24px}.problem{font-size:55px}.card{padding:23px 12px 20px}.title{font-size:17px}}
+</style>
+</head><body>
+<main class="app" id="app">
+<section id="game">
+<header><div class="title">🌈 Весёлое умножение</div><div class="progress" id="progress">1 / 30</div></header>
+<div class="topline"><span class="stars" id="stars">⭐ 0</span><span class="streak" id="streak">🔥 0 подряд</span></div>
+<div class="bar"><div id="bar"></div></div>
+<div class="card" id="card"><div class="mascot" id="mascot">🦊</div><div class="problem" id="problem">8 × 4</div><div class="reviewtag" id="reviewtag"></div></div>
+<form id="form"><input id="answer" class="answer" type="number" inputmode="numeric" autocomplete="off" placeholder="?" aria-label="Ответ"><div id="feedback" class="feedback">Какой получится ответ? 🤔</div><div class="buttons"><button class="btn primary" type="submit">Проверить ✨</button><button class="btn secondary" id="restart" type="button">Заново</button></div></form>
+<div class="stats"><div class="stat"><b id="correct">0</b><span>⭐ правильно</span></div><div class="stat"><b id="errors">0</b><span>🌱 учимся</span></div><div class="stat"><b id="accuracy">—</b><span>🎯 точность</span></div></div>
+</section>
+<section id="finish" class="finish hidden"><div class="trophy">🏆</div><h1>Раунд пройден!</h1><div class="big" id="finalAccuracy">100%</div><p id="finalSummary"></p><div class="panel"><h2>Что мы потренировали</h2><ul id="mistakes" class="mistakes"></ul></div><div class="buttons" style="margin-top:20px"><button class="btn primary" id="again">Ещё 30 🚀</button><button class="btn secondary" id="clearHistory">Сбросить историю</button></div></section>
 </main>
 <script>
-(() => {
-  const MAIN_ATTEMPTS = 30;
-  const FIRST = [1,2,3,4,5,6,7,8,9];
-  const SECOND = [1,2,3,4,5];
-  const $ = id => document.getElementById(id);
-  const els = {game:$('game'),finish:$('finish'),progress:$('progress'),bar:$('bar'),problem:$('problem'),answer:$('answer'),feedback:$('feedback'),correct:$('correct'),errors:$('errors'),accuracy:$('accuracy'),finalAccuracy:$('finalAccuracy'),finalSummary:$('finalSummary'),mistakes:$('mistakes')};
-
-  let state;
-  function freshState(){ return {attempt:0, correct:0, errors:0, current:null, pending:[], roundMistakes:{}, lastKey:null, extra:false}; }
-  function key(p){ return `${p.a}×${p.b}`; }
-  function randomProblem(){
-    let p, k, guard=0;
-    do { p={a:FIRST[Math.floor(Math.random()*FIRST.length)], b:SECOND[Math.floor(Math.random()*SECOND.length)], review:false}; k=key(p); guard++; }
-    while(k===state.lastKey && guard<20);
-    return p;
-  }
-  function scheduleReview(p){
-    const k=key(p);
-    const existing=state.pending.find(x=>key(x.problem)===k);
-    if(existing) existing.dueAfter=3;
-    else state.pending.push({problem:{a:p.a,b:p.b,review:true},dueAfter:3});
-  }
-  function chooseNext(){
-    const dueIndex=state.pending.findIndex(x=>x.dueAfter<=0);
-    if(dueIndex>=0) return state.pending.splice(dueIndex,1)[0].problem;
-    return randomProblem();
-  }
-  function tickPending(completed){
-    const completedKey=key(completed);
-    for(const item of state.pending){ if(key(item.problem)!==completedKey) item.dueAfter--; }
-  }
-  function updateStats(){
-    els.correct.textContent=state.correct; els.errors.textContent=state.errors;
-    const total=state.correct+state.errors; els.accuracy.textContent=total?`${Math.round(state.correct/total*100)}%`:'—';
-  }
-  function showProblem(){
-    state.current=chooseNext(); state.lastKey=key(state.current);
-    const shown=Math.min(state.attempt+1,MAIN_ATTEMPTS);
-    els.progress.textContent=state.extra?'Повторение':`${shown} / ${MAIN_ATTEMPTS}`;
-    els.bar.style.width=`${Math.min(state.attempt/MAIN_ATTEMPTS*100,100)}%`;
-    els.problem.textContent=`${state.current.a} × ${state.current.b}`;
-    els.answer.value=''; els.feedback.textContent=''; els.feedback.className='feedback'; els.answer.focus();
-  }
-  function recordHistory(p, ok){
-    const history=JSON.parse(localStorage.getItem('multiplicationHistory')||'{}'); const k=key(p);
-    history[k] ||= {attempts:0,errors:0}; history[k].attempts++; if(!ok) history[k].errors++;
-    localStorage.setItem('multiplicationHistory',JSON.stringify(history));
-  }
-  function finish(){
-    els.game.classList.add('hidden'); els.finish.classList.remove('hidden');
-    const total=state.correct+state.errors, pct=total?Math.round(state.correct/total*100):0;
-    els.finalAccuracy.textContent=`${pct}%`; els.finalSummary.textContent=`Основные 30: правильно ${state.correct}, ошибок ${state.errors}. Все назначенные повторы завершены.`;
-    const rows=Object.entries(state.roundMistakes);
-    els.mistakes.innerHTML=rows.length?rows.map(([k,v])=>`<li>${k}: ошибок ${v}</li>`).join(''):'<li>Ни одной ошибки 🎯</li>';
-  }
-  function start(){ state=freshState(); els.finish.classList.add('hidden'); els.game.classList.remove('hidden'); updateStats(); showProblem(); }
-
-  $('form').addEventListener('submit', e => {
-    e.preventDefault(); if(els.answer.value==='') return;
-    const p=state.current, value=Number(els.answer.value), expected=p.a*p.b, ok=value===expected;
-    recordHistory(p,ok);
-    const isMainAttempt = state.attempt < MAIN_ATTEMPTS;
-    if(ok){ if(isMainAttempt) state.correct++; els.feedback.textContent=p.review?'Правильно! ✅ Ошибка исправлена.':'Правильно! ✅'; els.feedback.className='feedback ok'; }
-    else { if(isMainAttempt) state.errors++; state.roundMistakes[key(p)]=(state.roundMistakes[key(p)]||0)+1; scheduleReview(p); els.feedback.textContent=`Неправильно ❌ Правильный ответ: ${expected}. Повторю через три примера.`; els.feedback.className='feedback bad'; }
-    state.attempt++; tickPending(p); updateStats();
-    if(state.attempt>=MAIN_ATTEMPTS) state.extra=true;
-    setTimeout(()=>{
-      if(state.attempt>=MAIN_ATTEMPTS && state.pending.length===0) finish(); else showProblem();
-    }, ok?450:1000);
-  });
-  $('restart').addEventListener('click',start); $('again').addEventListener('click',start);
-  $('clearHistory').addEventListener('click',()=>{localStorage.removeItem('multiplicationHistory'); start();});
-  start();
+(()=>{
+const MAIN_ATTEMPTS=30,FIRST=[1,2,3,4,5,6,7,8,9],SECOND=[1,2,3,4,5],$=id=>document.getElementById(id);
+const els={app:$('app'),game:$('game'),finish:$('finish'),progress:$('progress'),bar:$('bar'),problem:$('problem'),answer:$('answer'),feedback:$('feedback'),correct:$('correct'),errors:$('errors'),accuracy:$('accuracy'),finalAccuracy:$('finalAccuracy'),finalSummary:$('finalSummary'),mistakes:$('mistakes'),card:$('card'),mascot:$('mascot'),streak:$('streak'),stars:$('stars'),reviewtag:$('reviewtag')};
+const mascots=['🦊','🐼','🐸','🐯','🐵','🦄','🐙','🐨'],cheers=['Супер! ⭐','Отлично! 🎉','Так держать! 🚀','Верно! 😎','Ура! ✨'];
+let state;
+function freshState(){return{attempt:0,correct:0,errors:0,current:null,pending:[],roundMistakes:{},lastKey:null,extra:false,streak:0,stars:0}}
+function key(p){return p.a+'×'+p.b}
+function randomProblem(){let p,k,g=0;do{p={a:FIRST[Math.floor(Math.random()*FIRST.length)],b:SECOND[Math.floor(Math.random()*SECOND.length)],review:false};k=key(p);g++}while(k===state.lastKey&&g<20);return p}
+function scheduleReview(p){const k=key(p),e=state.pending.find(x=>key(x.problem)===k);if(e)e.dueAfter=3;else state.pending.push({problem:{a:p.a,b:p.b,review:true},dueAfter:3})}
+function chooseNext(){const i=state.pending.findIndex(x=>x.dueAfter<=0);return i>=0?state.pending.splice(i,1)[0].problem:randomProblem()}
+function tickPending(p){const k=key(p);for(const x of state.pending)if(key(x.problem)!==k)x.dueAfter--}
+function updateStats(){els.correct.textContent=state.correct;els.errors.textContent=state.errors;const t=state.correct+state.errors;els.accuracy.textContent=t?Math.round(state.correct/t*100)+'%':'—';els.streak.textContent='🔥 '+state.streak+' подряд';els.stars.textContent='⭐ '+state.stars}
+function showProblem(){state.current=chooseNext();state.lastKey=key(state.current);const shown=Math.min(state.attempt+1,MAIN_ATTEMPTS);els.progress.textContent=state.extra?'Повторение':shown+' / '+MAIN_ATTEMPTS;els.bar.style.width=Math.min(state.attempt/MAIN_ATTEMPTS*100,100)+'%';els.problem.textContent=state.current.a+' × '+state.current.b;els.reviewtag.textContent=state.current.review?'🔁 Возвращаемся к этому примеру':'';els.mascot.textContent=mascots[Math.floor(Math.random()*mascots.length)];els.answer.value='';els.feedback.textContent='Какой получится ответ? 🤔';els.feedback.className='feedback';els.answer.focus()}
+function recordHistory(p,ok){const h=JSON.parse(localStorage.getItem('multiplicationHistory')||'{}'),k=key(p);h[k]||={attempts:0,errors:0};h[k].attempts++;if(!ok)h[k].errors++;localStorage.setItem('multiplicationHistory',JSON.stringify(h))}
+function animate(cls){els.card.classList.remove('pop','shake');void els.card.offsetWidth;els.card.classList.add(cls)}
+function confetti(){const icons=['⭐','✨','🎉','💫','🌟'];for(let i=0;i<9;i++){const s=document.createElement('span');s.className='confetti';s.textContent=icons[i%icons.length];s.style.left=(45+Math.random()*10)+'vw';s.style.top=(35+Math.random()*10)+'vh';s.style.setProperty('--x',(Math.random()*240-120)+'px');s.style.setProperty('--y',(Math.random()*-220-40)+'px');document.body.appendChild(s);setTimeout(()=>s.remove(),950)}}
+function finish(){els.game.classList.add('hidden');els.finish.classList.remove('hidden');confetti();const t=state.correct+state.errors,p=t?Math.round(state.correct/t*100):0;els.finalAccuracy.textContent=p+'%';els.finalSummary.textContent='⭐ '+state.correct+' правильных ответов. Отличная тренировка!';const rows=Object.entries(state.roundMistakes);els.mistakes.innerHTML=rows.length?rows.map(([k,v])=>'<li>'+k+': потренировали '+v+' раз(а)</li>').join(''):'<li>Без ошибок — потрясающе! 🎯</li>'}
+function start(){state=freshState();els.finish.classList.add('hidden');els.game.classList.remove('hidden');updateStats();showProblem()}
+$('form').addEventListener('submit',e=>{e.preventDefault();if(els.answer.value==='')return;const p=state.current,value=Number(els.answer.value),expected=p.a*p.b,ok=value===expected;recordHistory(p,ok);const main=state.attempt<MAIN_ATTEMPTS;if(ok){if(main)state.correct++;state.streak++;state.stars++;els.feedback.textContent=p.review?'Получилось! ⭐ Ошибка исправлена.':cheers[Math.floor(Math.random()*cheers.length)];els.feedback.className='feedback ok';animate('pop');if(state.streak%5===0||p.review)confetti()}else{if(main)state.errors++;state.streak=0;state.roundMistakes[key(p)]=(state.roundMistakes[key(p)]||0)+1;scheduleReview(p);els.feedback.textContent='Почти! 🌱 Ответ: '+expected+'. Попробуем снова через 3 задания.';els.feedback.className='feedback bad';animate('shake')}state.attempt++;tickPending(p);updateStats();if(state.attempt>=MAIN_ATTEMPTS)state.extra=true;setTimeout(()=>{if(state.attempt>=MAIN_ATTEMPTS&&state.pending.length===0)finish();else showProblem()},ok?650:1300)});
+$('restart').addEventListener('click',start);$('again').addEventListener('click',start);$('clearHistory').addEventListener('click',()=>{localStorage.removeItem('multiplicationHistory');start()});start()
 })();
-</script>
-</body>
-</html>
+</script></body></html>
